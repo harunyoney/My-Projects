@@ -1,5 +1,6 @@
 import { getCategories } from "./src/getCategories";
 import { addBasket, urunBas } from "./src/urunleriBas";
+import Swal from "sweetalert2";
 
 export const btnDivs = document.getElementById("btns");
 export const productDivs = document.getElementById("products");
@@ -7,6 +8,10 @@ export const canvas = document.querySelector(".offcanvas-body");
 const searchInput = document.getElementById("searchInput");
 const categoryTitle = document.getElementById("category");
 const modalBody = document.querySelector(".modal-body");
+const modalTitle = document.querySelector(".modal-title");
+const body = document.querySelector("body");
+const basketCount = document.querySelector("#sepet");
+const clearBasket = document.getElementById("clear-basket");
 
 let data = [];
 let filtered = [];
@@ -16,13 +21,16 @@ const urunGetir = async () => {
     const res = await fetch(
       "https://anthonyfs.pythonanywhere.com/api/products/"
     );
-    data = await res.json();
-    console.log(data);
+
     if (!res.ok) {
       throw new Error(`${res.status}`);
     }
+    data = await res.json();
     urunBas(data);
     getCategories(data);
+    basket = JSON.parse(localStorage.getItem("basket")) || [];
+    addBasket(basket);
+    counter();
   } catch (error) {
     console.error(error);
   }
@@ -31,91 +39,115 @@ const urunGetir = async () => {
 document.addEventListener("DOMContentLoaded", urunGetir);
 
 btnDivs.addEventListener("click", (e) => {
-  searchInput.value = "";
-  searchInput.focus();
   if (e.target.classList.contains("btn")) {
-    categoryTitle.textContent = e.target.textContent;
-
-    filtered = data.filter((item) => {
-      if (item.category == e.target.textContent) {
-        return item;
-      }
-    });
+    searchInput.value = "";
+    searchInput.focus();
+    const category = e.target.textContent;
+    categoryTitle.textContent = category;
+    filtered =
+      category === "ALL"
+        ? data
+        : data.filter((item) => item.category === category);
     urunBas(filtered);
-
-    if (e.target.textContent === "ALL") {
-      urunBas(data);
-    }
   }
 });
 
 searchInput.addEventListener("input", (e) => {
-  if (categoryTitle.textContent === "ALL") {
-    productDivs.innerHTML = "";
-    e.target.value
-      ? urunBas(
-          data.filter((item) =>
-            item.title.toLowerCase().includes(e.target.value.toLowerCase())
-          )
-        )
-      : urunBas(data);
-  } else {
-    productDivs.innerHTML = "";
-    e.target.value
-      ? urunBas(
-          filtered.filter((item) =>
-            item.title.toLowerCase().includes(e.target.value.toLowerCase())
-          )
-        )
-      : urunBas(filtered);
-  }
+  const searchTerm = e.target.value.toLowerCase();
+  const filteredData = filtered.length ? filtered : data;
+  const results = filteredData.filter((item) =>
+    item.title.toLowerCase().includes(searchTerm)
+  );
+  urunBas(results);
 });
 
-productDivs.addEventListener("click", (e) => {
-  if (e.target.classList.contains("btn-danger")) {
-    let pid = e.target.id;
-
-    const prod = data.filter((item) => item.id == pid);
-
-    if (!basket.includes(prod[0])) {
-      basket.push(prod[0]);
+body.addEventListener("click", (e) => {
+  let prodId = e.target.id;
+  const product = data.filter((item) => item.id == prodId)[0];
+  if (e.target.classList.contains("add-basket")) {
+    addedBasketPopup();
+    if (!basket.includes(product)) {
+      basket.push(product);
     } else {
       basket.forEach((item) => {
-        if (item.id == pid) {
+        if (item.id == prodId) {
           ++item.quantity;
         }
       });
     }
-    console.log(basket);
     addBasket(basket);
+    counter();
+    localStorage.setItem("basket", JSON.stringify(basket));
   }
-  //! lOCAL sTORAGE YAPILACAK
-  //! sepete ekleyince alert bas, remove yaparken de uyarsın
-  //! sepetin üstündeki sayıyı güncelle
+  if (prodId == "clear-basket") {
+    basket = [];
+    localStorage.removeItem("basket");
+    addBasket(basket);
+    counter();
+  }
+
   //! clarus logosunu değiştir.
-  //! MODAL'E DETAILS BASILACAK!!!!!!!!!!!!
-  if (e.target.classList.contains("btn-primary")) {
-    console.log(e.target);
+
+  if (e.target.classList.contains("see-details")) {
+    const { title, description, price, image, id } = product;
+    modalTitle.innerHTML = `${title}`;
+    modalBody.innerHTML = `<div class="text-center">
+<img src="${image}" class="p-2" height="250px" alt="...">
+<h5 class="card-title">${title}</h5>
+<p class="card-text">${description}</p>
+<p class="card-text">Fiyat: ${price} $</p>
+<button id="${id}" class="btn add-basket btn-danger">Sepete Ekle</button>
+</div>
+`;
   }
 });
 
 canvas.addEventListener("click", (e) => {
-  let pid = e.target.id;
-  const prod = basket.filter((item) => item.id == pid)[0];
-  if (e.target.classList.contains("btn-danger")) {
-    basket = basket.filter((item) => item !== prod);
-    prod.quantity = 1;
+  let prodId = e.target.id;
+  const product = basket.filter((item) => item.id == prodId)[0];
+  if (e.target.classList.contains("remove")) {
+    Swal.fire({
+      icon: "success",
+      title: "Sepetten Kaldırıldı",
+    });
+    basket = basket.filter((item) => item !== product);
+    product.quantity = 1;
   }
 
   if (e.target.classList.contains("fa-minus")) {
-    if (prod.quantity > 1) {
-      --prod.quantity;
+    if (product.quantity > 1) {
+      --product.quantity;
     }
   }
 
   if (e.target.classList.contains("fa-plus")) {
-    ++prod.quantity;
+    ++product.quantity;
   }
 
   addBasket(basket);
+  counter();
+  localStorage.setItem("basket", JSON.stringify(basket));
 });
+
+const counter = () => {
+  let n = basket.reduce((acc, qty) => acc + qty.quantity, 0);
+  basketCount.textContent = n;
+};
+
+const addedBasketPopup = () => {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
+  Toast.fire({
+    icon: "success",
+    title: "Sepete Eklendi",
+  });
+};

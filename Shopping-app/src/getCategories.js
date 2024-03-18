@@ -1,18 +1,18 @@
 import { btnDivs } from "../main";
 
 export const getCategories = (item) => {
-   const categories = item.reduce((acc, element) => {
-    
-    if(!acc.includes(element["category"])){
-        acc.push(element["category"])
-        
-    }
-    return acc
-   },["ALL"])
-   
+  const categories = item.reduce(
+    (acc, element) => {
+      if (!acc.includes(element["category"])) {
+        acc.push(element["category"]);
+      }
+      return acc;
+    },
+    ["ALL"]
+  );
 
-let i=0
-const btnColors = [
+  let i = 0;
+  const btnColors = [
     "primary",
     "secondary",
     "success",
@@ -22,14 +22,10 @@ const btnColors = [
     "light",
     "dark",
   ];
-categories.forEach(element => {
-    
+  categories.forEach((element) => {
     btnDivs.innerHTML += `
     <button class='btn btn-${btnColors[i]}'>${element}</button>
-    `
-    ++i
-});
-
-
-
+    `;
+    ++i;
+  });
 };

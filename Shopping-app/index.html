@@ -23,6 +23,12 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
+      .line-clamp-1 {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
     </style>
     <title>Shopping</title>
   </head>
@@ -76,39 +82,16 @@
           aria-label="Close"
         ></button>
       </div>
-      <div class="offcanvas-body">
-        <!-- <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4 my-auto">
-              <img
-                src="./assets/Clarusway_Logo.png"
-                class="img-fluid rounded-start"
-                alt="..."
-              />
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">Ürün Adı</h5>
-                <div class="d-flex align-items-center gap-2" role="button">
-                  <i
-                    class="fa-solid fa-minus border rounded-circle bg-danger text-white p-2"
-                  ></i
-                  ><span class="fw-bold">miktar</span
-                  ><i
-                    class="fa-solid fa-plus border bg-danger text-white rounded-circle p-2"
-                  ></i>
-                </div>
-                <p class="card-text">Total : fiyat x miktar</p>
-                <button class="btn btn-danger">Remove</button>
-              </div>
-            </div>
-          </div>
-        </div> -->
-      </div>
+      <div class="offcanvas-body"></div>
       <div class="offcanvas-footer">
-        <div class="d-flex justify-content-between align-items-center">
-          <h5>Toplam Tutar</h5>
-          <h5 id="tot">0 $</h5>
+        <div class="d-flex p-1 justify-content-between align-items-center">
+          <h5 class="ms-2">Toplam Tutar</h5>
+          <h5 class="me-2" id="tot">0 $</h5>
+        </div>
+        <div class="p-2 d-flex justify-content-center align-items-center">
+          <button class="btn btn-danger btn-outline-warning" id="clear-basket">
+            Sepeti Temizle
+          </button>
         </div>
       </div>
     </div>
