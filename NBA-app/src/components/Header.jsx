@@ -19,7 +19,7 @@ const  Header =({data})=>{
 
     const inputsad=(e)=>{        
         const input2=e.target.value
-         filtered=  data.filter((e)=>e.name.includes(input2))
+         filtered =  data.filter((e)=>e.name.toLowerCase().includes(input2.toLowerCase()))
             // console.log(filtered)
 
      setinput(filtered)
