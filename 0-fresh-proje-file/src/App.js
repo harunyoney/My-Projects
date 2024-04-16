@@ -1,12 +1,23 @@
-//? Component
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar/Navbar";
+
 function App() {
   //? JS kodu
 
   return (
     //! JSX (HTML- JS'nin birleşmiş hali)
-    <div className="App">
-      <h2 style={{ color: "red" }}>Hoşgeldin Ya Şehri React</h2>
-    </div>
+
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        {/* <Route path="" element={ }    />
+      <Route path="" element={ }    />
+      <Route path="" element={ }    />
+      <Route path="" element={ }    /> */}
+      </Routes>
+
+      <footer>asdasde</footer>
+    </BrowserRouter>
   );
 }
 

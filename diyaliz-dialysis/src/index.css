@@ -16,3 +16,13 @@ code {
   color: blueviolet;
   font-size: 2rem;
 }
+
+.div2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dib2 div {
+  width: 250px;
+  height: 250px;
+}
