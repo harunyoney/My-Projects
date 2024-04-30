@@ -1,70 +1,157 @@
-import React from "react";
-import GoogleIcon from "../assets/icons/GoogleIcon";
+import * as React from 'react';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 
-const Register = () => {
-  return (
-    <div className="flex justify-center">
-      <div className="overflow-hidden flex-1 h-screen justify-center items-center dark:bg-gray-dark-main">
-        <div className={`form-container mt-[5vh] w-[380px] h-[580px] `}>
-          <form>
-            <h2 className="text-red-main text-2xl font-[500] text-center tracking-[0.1em] mb-3">
-              Sign Up
-            </h2>
-            <div className="relative z-0 w-full mb-6 group">
-              <input
-                name="floating_text"
-                className="peer"
-                type="text"
-                required
-                placeholder=" "
-              />
-              <label htmlFor="floating_text">First Name</label>
-            </div>
-            <div className="relative z-0 w-full mb-6 group">
-              <input
-                name="floating_text"
-                className="peer"
-                type="text"
-                required
-                placeholder=" "
-              />
-              <label htmlFor="floating_text">Last Name</label>
-            </div>
-            <div className="relative z-0 w-full mb-6 group">
-              <input
-                name="floating_email"
-                className="peer"
-                type="email"
-                placeholder=" "
-                required
-              />
-              <label htmlFor="floating_email">Email</label>
-            </div>
-            <div className="relative z-0 w-full mb-6 group">
-              <input
-                name="floating_password"
-                className="peer"
-                type="password"
-                placeholder=" "
-                required
-              />
-              <label htmlFor="floating_password">Password</label>
-            </div>
-            <button className="btn-danger" type="submit">
-              Register
-            </button>
-            <button
-              className="flex justify-between text-center items-center btn-danger"
-              type="button"
+function not(a, b) {
+  return a.filter((value) => b.indexOf(value) === -1);
+}
+
+function intersection(a, b) {
+  return a.filter((value) => b.indexOf(value) !== -1);
+}
+
+function union(a, b) {
+  return [...a, ...not(b, a)];
+}
+
+export default function Register() {
+  const [checked, setChecked] = React.useState([]);
+  const [left, setLeft] = React.useState([0, 1, 2, 3]);
+  const [right, setRight] = React.useState([4, 5, 6, 7]);
+
+  const leftChecked = intersection(checked, left);
+  const rightChecked = intersection(checked, right);
+
+  const handleToggle = (value) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
+  const numberOfChecked = (items) => intersection(checked, items).length;
+
+  const handleToggleAll = (items) => () => {
+    if (numberOfChecked(items) === items.length) {
+      setChecked(not(checked, items));
+    } else {
+      setChecked(union(checked, items));
+    }
+  };
+
+  const handleCheckedRight = () => {
+    setRight(right.concat(leftChecked));
+    setLeft(not(left, leftChecked));
+    setChecked(not(checked, leftChecked));
+  };
+
+  const handleCheckedLeft = () => {
+    setLeft(left.concat(rightChecked));
+    setRight(not(right, rightChecked));
+    setChecked(not(checked, rightChecked));
+  };
+
+  const customList = (title, items) => (
+    <Card>
+      <CardHeader
+        sx={{ px: 2, py: 1 }}
+        avatar={
+          <Checkbox
+            onClick={handleToggleAll(items)}
+            checked={numberOfChecked(items) === items.length && items.length !== 0}
+            indeterminate={
+              numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0
+            }
+            disabled={items.length === 0}
+            inputProps={{
+              'aria-label': 'all items selected',
+            }}
+          />
+        }
+        title={title}
+        subheader={`${numberOfChecked(items)}/${items.length} selected`}
+      />
+      <Divider />
+      <List
+        sx={{
+          width: 200,
+          height: 230,
+          bgcolor: 'background.paper',
+          overflow: 'auto',
+        }}
+        dense
+        component="div"
+        role="list"
+      >
+        {items.map((value) => {
+          const labelId = `transfer-list-all-item-${value}-label`;
+
+          return (
+            <ListItemButton
+              key={value}
+              role="listitem"
+              onClick={handleToggle(value)}
             >
-              Continue with Google
-              <GoogleIcon color="currentColor" />
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+              <ListItemIcon>
+                <Checkbox
+                  checked={checked.indexOf(value) !== -1}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{
+                    'aria-labelledby': labelId,
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+            </ListItemButton>
+          );
+        })}
+      </List>
+    </Card>
   );
-};
 
-export default Register;
+  return (
+    <Grid container spacing={2} justifyContent="center" alignItems="center">
+      <Grid item>{customList('Choices', left)}</Grid>
+      <Grid item>
+        <Grid container direction="column" alignItems="center">
+          <Button
+            sx={{ my: 0.5 }}
+            variant="outlined"
+            size="small"
+            onClick={handleCheckedRight}
+            disabled={leftChecked.length === 0}
+            aria-label="move selected right"
+          >
+            &gt;
+          </Button>
+          <Button
+            sx={{ my: 0.5 }}
+            variant="outlined"
+            size="small"
+            onClick={handleCheckedLeft}
+            disabled={rightChecked.length === 0}
+            aria-label="move selected left"
+          >
+            &lt;
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid item>{customList('Chosen', right)}</Grid>
+    </Grid>
+  );
+}
