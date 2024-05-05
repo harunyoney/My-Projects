@@ -10,6 +10,9 @@ import { Link, useNavigate } from "react-router-dom"
 
 import TextField from "@mui/material/TextField"
 
+
+//! TODO LOGİN KISMINDAKİ VALİDASYONU BURAYA UYARLA
+
 const Register = () => {
   const navigate = useNavigate()
 
