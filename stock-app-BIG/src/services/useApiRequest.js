@@ -12,11 +12,26 @@ const useApiRequest = () => {
       const { data } = await axios.post(`${BASE_URL}/auth/login`, userData);
 
       console.log(data);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Register request failed:", error);
+    }
   };
-  const register = () => {};
+  const register = async (userData) => {
+    const BASE_URL = "https://11136.fullstack.clarusway.com";
+
+    try {
+      const { data } = await axios.post(`${BASE_URL}/users`, userData);
+
+      console.log(data);
+    } catch (error) {
+      console.error("Register request failed:", error);
+    }
+  };
+
   const logout = () => {};
   return { login, register, logout };
 };
 
 export default useApiRequest;
+
+//              123456Har*

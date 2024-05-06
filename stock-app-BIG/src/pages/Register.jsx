@@ -7,13 +7,50 @@ import Grid from "@mui/material/Grid"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import { Link, useNavigate } from "react-router-dom"
-
+import useApiRequest from "../services/useApiRequest";
 import TextField from "@mui/material/TextField"
+import { Formik,Form } from "formik"
+import { object, string } from "yup"
 
 
 //! TODO LOGİN KISMINDAKİ VALİDASYONU BURAYA UYARLA
 
 const Register = () => {
+  const {register}=useApiRequest()
+  const initialValues= {
+  "username": "",
+  "password": "",
+  "email": "",
+  "firstName": "",
+  "lastName": ""
+  }
+  const registerSchema=object({
+    email: string()
+      .email("Geçerli bir email giriniz")
+      .required("Email zorunludur"),
+    password: string()
+      .required("Şifre zorunludur")
+      .min(8, "Şifre en az 8 karakter olmalıdır")
+      .max(16, "Şifre en fazla 16 karakter olmalıdır")
+      .matches(/\d+/, "Şifre en az bir rakam içermelidir.")
+      .matches(/[a-z]+/, "Şifre en az bir küçük harf içermelidir.")
+      .matches(/[A-Z]+/, "Şifre en az bir büyük harf içermelidir.")
+      .matches(
+        /[@$!%*?&]+/,
+        "Şifre en az bir özel karakter(@$!%*?&) içermelidir."
+      ),
+      username: string()
+    .required("Username zorunludur"),
+
+      firstName: string()
+      .required("Username zorunludur"),
+      lastName: string()
+      .required("Username zorunludur"),
+
+  });
+
+
+
   const navigate = useNavigate()
 
   return (
@@ -54,8 +91,30 @@ const Register = () => {
             Register
           </Typography>
 
+          <Formik
+          initialValues={initialValues}
+          validationSchema={registerSchema}
+          onSubmit={(values, actions) => {
+              actions.resetForm();
+              actions.setSubmitting(false);
+              register(values);
+              }}
+
+          
+          
+          
+          >
+            {({ values,
+              handleChange,
+              handleBlur,
+              touched,
+              errors,
+              isSubmitting,}
+
+            )=>{return (
+            <Form>
           <Box
-            component="form"
+            
             sx={{ display: "flex", flexDirection: "column", gap: 2 }}
           >
             <TextField
@@ -64,40 +123,68 @@ const Register = () => {
               id="userName"
               type="text"
               variant="outlined"
+              value={values.username}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.username && Boolean(errors.username)}
+              helperText={touched.username && errors.username}
             />
             <TextField
               label="First Name"
-              name="first_name"
+              name="firstName"
               id="firstName"
               type="text"
               variant="outlined"
+              value={values.firstName}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.firstName && Boolean(errors.firstName)}
+              helperText={touched.firstName && errors.firstName}
             />
             <TextField
               label="Last Name"
-              name="last_name"
+              name="lastName"
               id="last_name"
               type="text"
               variant="outlined"
+              value={values.lastName}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.lastName && Boolean(errors.lastName)}
+              helperText={touched.lastName && errors.lastName}
             />
             <TextField
-              label="Email"
-              name="email"
-              id="email"
-              type="email"
-              variant="outlined"
-            />
-            <TextField
-              label="password"
-              name="password"
-              id="password"
-              type="password"
-              variant="outlined"
-            />
-            <Button type="submit" variant="contained" size="large">
+                    label="Email"
+                    name="email"
+                    id="email"
+                    type="email"
+                    variant="outlined"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
+                  />
+                  <TextField
+                    label="password"
+                    name="password"
+                    id="password"
+                    type="password"
+                    variant="outlined"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                  />
+            <Button type="submit" variant="contained" size="large" disabled={isSubmitting}>
               Submit
             </Button>
           </Box>
-
+          </Form>
+        )}}
+            
+</Formik>
           <Box sx={{ textAlign: "center", mt: 2 }}>
             <Link to="/">Do you have an account?</Link>
           </Box>
