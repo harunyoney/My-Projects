@@ -1,37 +1,56 @@
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import axios from "axios"
+import { toastErrorNotify, toastSuccessNotify } from "../helper/ToastNotify"
+import {
+  fetchFail,
+  fetchStart,
+  loginSuccess,
+  registerSuccess,
+} from "../features/authSlice"
+import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
-import React from "react";
+//?Custom hook
+//? Eger uygulamanın her yerinde kullanmak için bazı fonksiyonlara ihtyaç varsa  ve bu fonksiyonlar içerisinde custom hook'ların ( useSelector, useDispatch,useNavigate etc.) kullanılması gerekiyorsa o Zaman çözüm Bu dosyayı custom hook'a çevirmektir.  
 
 const useApiRequest = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const login = async (userData) => {
-    const BASE_URL = "https://11136.fullstack.clarusway.com";
+    //   const BASE_URL = "https://10001.fullstack.clarusway.com"
 
+    dispatch(fetchStart())
     try {
-      const { data } = await axios.post(`${BASE_URL}/auth/login`, userData);
-
-      console.log(data);
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/auth/login`,
+        userData
+      )
+      dispatch(loginSuccess(data))
+      toastSuccessNotify("Login işlemi başarılı")
+      navigate("/stock")
     } catch (error) {
-      console.error("Register request failed:", error);
+      dispatch(fetchFail())
+      toastErrorNotify("Login başarısız oldu")
+      console.log(error)
     }
-  };
-  const register = async (userData) => {
-    const BASE_URL = "https://11136.fullstack.clarusway.com";
+  }
 
+  const register = async (userInfo) => {
+    dispatch(fetchStart())
     try {
-      const { data } = await axios.post(`${BASE_URL}/users`, userData);
-
-      console.log(data);
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/users/`,
+        userInfo
+      )
+      dispatch(registerSuccess(data))
+      navigate("/stock")
     } catch (error) {
-      console.error("Register request failed:", error);
+      dispatch(fetchFail())
     }
-  };
+  }
+  const logout = async () => {}
 
-  const logout = () => {};
-  return { login, register, logout };
-};
+  return { login, register, logout }
+}
 
-export default useApiRequest;
-
-//              123456Har*
+export default useApiRequest

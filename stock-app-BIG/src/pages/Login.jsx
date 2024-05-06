@@ -1,19 +1,21 @@
-import Avatar from "@mui/material/Avatar";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import LockIcon from "@mui/icons-material/Lock";
-import image from "../assets/result.svg";
-import { Link } from "react-router-dom";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
-import { Formik, Form } from "formik";
-import { object, string } from "yup";
-import useApiRequest from "../services/useApiRequest";
+import Avatar from "@mui/material/Avatar"
+import Container from "@mui/material/Container"
+import Grid from "@mui/material/Grid"
+import Typography from "@mui/material/Typography"
+import LockIcon from "@mui/icons-material/Lock"
+import image from "../assets/result.svg"
+import { Link } from "react-router-dom"
+import Box from "@mui/material/Box"
+import TextField from "@mui/material/TextField"
+import { Button } from "@mui/material"
+import { Formik, Form } from "formik"
+import { object, string } from "yup"
+// import { login } from "../services/useApiRequest"
+import useApiRequest from "../services/useApiRequest"
 
 const Login = () => {
-  const { login } = useApiRequest();
+  const { login } = useApiRequest()
+
   const loginSchema = object({
     email: string()
       .email("Geçerli bir email giriniz")
@@ -29,7 +31,7 @@ const Login = () => {
         /[@$!%*?&]+/,
         "Şifre en az bir özel karakter(@$!%*?&) içermelidir."
       ),
-  });
+  })
 
   return (
     <Container maxWidth="lg">
@@ -72,17 +74,15 @@ const Login = () => {
             initialValues={{ email: "", password: "" }}
             validationSchema={loginSchema}
             onSubmit={(values, actions) => {
-              actions.resetForm();
-              actions.setSubmitting(false);
-              login(values);
-
               //TODO
-
               //? POST (Login)
               //? Toastify
               //? Global state güncellenmesi
-
+              //? form resetleme
               //? navigate
+              login(values)
+              actions.resetForm()
+              actions.setSubmitting(false) //? isSubmitting
             }}
           >
             {({
@@ -143,7 +143,7 @@ const Login = () => {
         </Grid>
       </Grid>
     </Container>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
