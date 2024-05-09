@@ -1,72 +1,64 @@
-// import axios from "axios"
-import { toastErrorNotify, toastSuccessNotify } from "../helper/ToastNotify"
-import {
-  fetchFail,
-  fetchStart,
-  loginSuccess,
-  registerSuccess,
-  logoutSuccess,
-} from "../features/authSlice"
-import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
-import useAxios from "./useAxios"
-
-//?Custom hook
-//? Eger uygulamanın her yerinde kullanmak için bazı fonksiyonlara ihtyaç varsa  ve bu fonksiyonlar içerisinde custom hook'ların ( useSelector, useDispatch,useNavigate etc.) kullanılması gerekiyorsa o Zaman çözüm Bu dosyayı custom hook'a çevirmektir.
+import axios from "axios";
+import { toastErrorNotify, toastSuccessNotify } from "../helper/ToastNotify";
+import { fetchFail, fetchStart, loginSuccess, logoutSuccess, registerSuccess } from "../features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const useApiRequest = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const { axiosToken, axiosPublic } = useAxios()
-  // const { token } = useSelector((state) => state.auth)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {token} = useSelector((state) => state.auth)
   const login = async (userData) => {
-    //   const BASE_URL = "https://10001.fullstack.clarusway.com"
-
-    dispatch(fetchStart())
+    // const BASE_URL ="https://10148.fullstack.clarusway.com"
+    dispatch(fetchStart());
     try {
-      // const { data } = await axios.post(
-      //   `${process.env.REACT_APP_BASE_URL}/auth/login`,
-      //   userData
-      // )
-      const { data } = await axiosPublic.post("/auth/login/", userData)
-      dispatch(loginSuccess(data))
-      toastSuccessNotify("Login işlemi başarılı")
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/auth/login`,
+        userData
+      );
+      dispatch(loginSuccess(data));
+      toastSuccessNotify("Giriş Başarılı");
       navigate("/stock")
+      console.log(data);
+      
     } catch (error) {
-      dispatch(fetchFail())
-      toastErrorNotify("Login başarısız oldu")
-      console.log(error)
+      dispatch(fetchFail());
+      toastErrorNotify("Giriş Başarısız");
+      console.log(error);
     }
-  }
-
-  const register = async (userInfo) => {
+  };
+  const register = async (userData)=> {
     dispatch(fetchStart())
     try {
-      // const { data } = await axios.post(
-      //   `${process.env.REACT_APP_BASE_URL}/users/`,
-      //   userInfo
-      // )
-      const { data } = await axiosPublic.post("/users/", userInfo)
+      const {data} = await axios.post( `${process.env.REACT_APP_BASE_URL}/users/`,
+      userData)
       dispatch(registerSuccess(data))
+      toastSuccessNotify("Kayıt Başarılı")
       navigate("/stock")
     } catch (error) {
-      dispatch(fetchFail())
+      dispatch(fetchFail());
+      toastErrorNotify("Kayıt Başarısız");
+      console.log(error);
     }
   }
-  const logout = async () => {
+  const logout = async ()=> {
     dispatch(fetchStart())
     try {
-      // await axios(`${process.env.REACT_APP_BASE_URL}/auth/logout`, {
-      //   headers: { Authorization: `Token ${token}` },
-      // })
-      await axiosToken.get("/auth/logout")
+      const res = await axios( `${process.env.REACT_APP_BASE_URL}/auth/logout`, {
+        headers: {Authorization: `Token ${token}`}
+      }
+      )
+      console.log(res)
       dispatch(logoutSuccess())
+      toastSuccessNotify("Çıkış Başarılı")
+      navigate("/")
     } catch (error) {
-      dispatch(fetchFail())
+      dispatch(fetchFail());
+      toastErrorNotify("Çıkış Başarısız");
+      console.log(error);
     }
   }
+  return { login, register, logout };
+};
 
-  return { login, register, logout }
-}
-
-export default useApiRequest
+export default useApiRequest;

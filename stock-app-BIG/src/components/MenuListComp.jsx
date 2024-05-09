@@ -52,12 +52,12 @@ const MenuListComp = () => {
       <List>
         {icons.map((item, index) => (
           <ListItem
-            key={index}
+            key={item.title}
             disablePadding
             onClick={() => navigate(item.path)}
             sx={{
-              color: "white",
-              "& .MuiSvgIcon-root": { color: "white" },
+              color:"white",
+              "& .MuiSvgIcon-root": {color:"white"}
             }}
           >
             <ListItemButton>
