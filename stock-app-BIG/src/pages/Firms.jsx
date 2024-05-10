@@ -1,69 +1,59 @@
-import { useEffect } from "react";
-import useStockRequest from "../services/useStockRequest";
-import { useSelector } from "react-redux";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import { Button } from "@mui/material";
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import { useEffect, useState } from "react"
+// import useAxios from "../services/useAxios"
+import useStockRequest from "../services/useStockRequest"
+import { useSelector } from "react-redux"
+import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
+import Grid from "@mui/material/Grid"
+import FirmCard from "../components/FirmCard"
+import FirmModal from "../components/FirmModal"
+
+// export const getFirms = async () => {
+//   try {
+//     const { data } = axiosToken("/firms")
+//     console.log(data)
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 const Firms = () => {
+  // const { axiosToken } = useAxios()
+  // const { getFirms, getSales } = useStockRequest()
+  const { getStock } = useStockRequest()
+  const { firms } = useSelector((state) => state.stock)
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
-  const { getDatas, deleteDatas } = useStockRequest();
-  const { firms } = useSelector((state) => state.getData);
-  console.log(firms);
   useEffect(() => {
-    getDatas("firms");
-  }, []);
+    // getFirms()
+    // getSales()
+    // getStock("sales")
+    getStock("firms")
+  }, [])
 
   return (
-    <>
-    <h2>Firms</h2>
-    <Button>New Firm</Button>
-    <Container  sx={{
-      display:"flex",
-      justifyContent:"center",
-      alignItems:"center",
-      flexWrap:"wrap",
-      gap:"20px"
-    }} maxWidth="xl">
-   {firms?.map((item)=> (
-    <Card key={item._id} sx={{ maxWidth: 345 }}>
-      <CardMedia
-        component="img"
-        alt="green iguana"
-        height="140"
-        image={item.image}
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {item.name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" noWrap>
-        {item.address}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button onClick={()=>{
-          deleteDatas("firms",item._id)
-          getDatas("firms")
-          }} variant="contained" size="small">delete</Button>
-        <Button size="small">edit</Button>
-      </CardActions>
-    </Card>
-   ))}
-  
-    
-  
+    <div>
+      <Typography variant="h4" color={"error"} mb={2}>
+        Firms
+      </Typography>
 
-      </Container>
-    </>
-      
-    
-  );
-};
+      <Button variant="contained" onClick={handleOpen}>
+        New Firm
+      </Button>
 
-export default Firms;
+      <FirmModal handleClose={handleClose} open={open} />
+
+      <Grid container gap={2} mt={3} justifyContent={"center"}>
+        {firms.map((firm) => (
+          <Grid item key={firm._id}>
+            <FirmCard firm={firm} />
+          </Grid>
+        ))}
+      </Grid>
+    </div>
+  )
+}
+
+export default Firms

@@ -1,36 +1,79 @@
 import { useDispatch } from "react-redux"
 import useAxios from "./useAxios"
-import { fetchFail, fetchStart, getDataSuccess } from "../features/getSlice"
+import {
+  fetchFail,
+  fetchStart,
+  getFirmsSuccess,
+  getSalesSuccess,
+  getStockSuccess,
+} from "../features/stockSlice"
+import { toastErrorNotify, toastSuccessNotify } from "../helper/ToastNotify"
 
 const useStockRequest = () => {
-  const { axiosToken, axiosPublic } = useAxios()
+  const { axiosToken } = useAxios()
   const dispatch = useDispatch()
 
-  const getDatas = async (endpoint) => {
-     dispatch(fetchStart())
-    try {
-      const { data } = await axiosToken(`/${endpoint}`)
-      console.log(data)
-         dispatch(getDataSuccess({key:endpoint, data}))
-    } catch (error) {
-         dispatch(fetchFail())
-      console.log(error)
-    }
-  }
+  // const getFirms = async () => {
+  //   dispatch(fetchStart())
+  //   try {
+  //     const { data } = await axiosToken("/firms")
+  //     dispatch(getFirmsSuccess(data.data))
+  //   } catch (error) {
+  //     dispatch(fetchFail())
+  //     console.log(error)
+  //   }
+  // }
 
-  const deleteDatas = async (endpoint, id) => {
+  // const getSales = async () => {
+  //   dispatch(fetchStart())
+  //   try {
+  //     const { data } = await axiosToken("/sales")
+  //     dispatch(getSalesSuccess(data.data))
+  //   } catch (error) {
+  //     dispatch(fetchFail())
+  //     console.log(error)
+  //   }
+  // }
+
+  const getStock = async (path = "firms") => {
     dispatch(fetchStart())
-    console.log(id)
     try {
-      await axiosToken.delete(`/${endpoint}/${id}`)
-      
+      const { data } = await axiosToken(`/${path}`)
+      const stockData = data.data
+      dispatch(getStockSuccess({ stockData, path }))
     } catch (error) {
       dispatch(fetchFail())
       console.log(error)
     }
   }
 
-  return { getDatas, deleteDatas }
+  const deleteStock = async (path = "firms", id) => {
+    dispatch(fetchStart())
+    try {
+      await axiosToken.delete(`/${path}/${id}`)
+      getStock(path)
+    } catch (error) {
+      dispatch(fetchFail())
+      console.log(error)
+    }
+  }
+
+  const postStock = async (path = "firms", info) => {
+    dispatch(fetchStart())
+    try {
+      await axiosToken.post(`/${path}/`, info)
+      getStock(path)
+      toastSuccessNotify(`${path} basariliyla eklenmiştir.`)
+    } catch (error) {
+      dispatch(fetchFail())
+      toastErrorNotify(`${path} eklenememiştir.`)
+      console.log(error)
+    }
+  }
+
+  // return { getFirms, getSales }
+
+  return { getStock, deleteStock, postStock }
 }
 
 export default useStockRequest
