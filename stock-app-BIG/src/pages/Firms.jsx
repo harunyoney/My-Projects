@@ -7,6 +7,11 @@ import Button from "@mui/material/Button"
 import Grid from "@mui/material/Grid"
 import FirmCard from "../components/FirmCard"
 import FirmModal from "../components/FirmModal"
+import TableSkeleton, {
+  CardSkeleton,
+  ErrorMessage,
+  NoDataMessage,
+} from "../components/DataFetchMessages"
 
 // export const getFirms = async () => {
 //   try {
@@ -21,10 +26,26 @@ const Firms = () => {
   // const { axiosToken } = useAxios()
   // const { getFirms, getSales } = useStockRequest()
   const { getStock } = useStockRequest()
-  const { firms } = useSelector((state) => state.stock)
+  const { firms, loading, error } = useSelector((state) => state.stock)
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+
+  const [info, setInfo] = useState({
+    name: "",
+    phone: "",
+    image: "",
+    address: "",
+  })
+
+  const handleClose = () => {
+    setOpen(false)
+    setInfo({
+      name: "",
+      phone: "",
+      image: "",
+      address: "",
+    })
+  }
 
   useEffect(() => {
     // getFirms()
@@ -39,19 +60,33 @@ const Firms = () => {
         Firms
       </Typography>
 
-      <Button variant="contained" onClick={handleOpen}>
+      <Button variant="contained" onClick={handleOpen} disabled={error}>
         New Firm
       </Button>
 
-      <FirmModal handleClose={handleClose} open={open} />
+      {loading && (
+        <CardSkeleton>
+          <FirmCard />
+        </CardSkeleton>
+      )}
 
-      <Grid container gap={2} mt={3} justifyContent={"center"}>
-        {firms.map((firm) => (
-          <Grid item key={firm._id}>
-            <FirmCard firm={firm} />
-          </Grid>
-        ))}
-      </Grid>
+      {!loading && !firms.length && <NoDataMessage />}
+      {!loading && firms.length > 0 && (
+        <Grid container gap={2} mt={3} justifyContent={"center"}>
+          {firms.map((firm) => (
+            <Grid item key={firm._id}>
+              <FirmCard firm={firm} handleOpen={handleOpen} setInfo={setInfo} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+
+      <FirmModal
+        handleClose={handleClose}
+        open={open}
+        info={info}
+        setInfo={setInfo}
+      />
     </div>
   )
 }

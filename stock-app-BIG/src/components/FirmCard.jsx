@@ -9,11 +9,11 @@ import EditIcon from "@mui/icons-material/Edit"
 import { btnStyle } from "../styles/globalStyles"
 import useStockRequest from "../services/useStockRequest"
 
-export default function FirmCard({ firm }) {
+export default function FirmCard({ firm, handleOpen, setInfo }) {
   //   const btnStyle = {
   //     "&:hover": { color: "red", cursor: "pointer" },
   //   }
-  const { address, _id, name, phone, image } = firm
+  // const { address, _id, name, phone, image } = firm
   const { deleteStock } = useStockRequest()
   return (
     <Card
@@ -28,24 +28,30 @@ export default function FirmCard({ firm }) {
         p: 2,
       }}
     >
-      <CardMedia component="img" alt={name} height="140" image={image} />
+      <CardMedia component="img" alt={firm?.name} height="140" image={firm?.image} />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {name}
+          {firm?.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {address}
+          {firm?.address}
         </Typography>
         <Typography variant="body2" color="text.secondary" mt={2}>
-          {phone}
+          {firm?.phone}
         </Typography>
       </CardContent>
       <CardActions>
         <DeleteOutlineIcon
           sx={btnStyle}
-          onClick={() => deleteStock("firms", _id)}
+          onClick={() => deleteStock("firms", firm?._id)}
         />
-        <EditIcon sx={btnStyle} />
+        <EditIcon
+          sx={btnStyle}
+          onClick={() => {
+            handleOpen()
+            setInfo(firm)
+          }}
+        />
       </CardActions>
     </Card>
   )
