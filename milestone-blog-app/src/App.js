@@ -4,7 +4,8 @@ import { grey, blueGrey } from "@mui/material/colors";
 import { Provider } from "react-redux";
 import store from "./app/store";
 import { ToastContainer } from "react-toastify";
-import NavBar from "./components/NavBar";
+import Navbar from "./components/Navbar";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
   const theme = createTheme({
@@ -19,12 +20,15 @@ function App() {
   });
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <Provider store={store}>
-          <AppRouter />
-        </Provider>
-        <ToastContainer />
-      </ThemeProvider>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <Provider store={store}>
+            <Navbar />
+            <AppRouter />
+          </Provider>
+          <ToastContainer />
+        </ThemeProvider>
+      </BrowserRouter>
     </>
   );
 }

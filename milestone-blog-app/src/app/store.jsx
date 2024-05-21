@@ -7,7 +7,7 @@ import { persistStore, persistReducer, FLUSH,
   REGISTER, } from 'redux-persist'
 import storage from 'redux-persist/lib/storage/session'
 import authReducer from "../features/authSlice";
-import blogReducer from "../features/blogSlice";
+import blogsReducer from "../features/blogsSlice";
 
 
 const persistConfig = {
@@ -20,9 +20,9 @@ const persistedReducer = persistReducer(persistConfig, authReducer)
 const store = configureStore({
   reducer: {
     auth: persistedReducer,
-    blogs:blogReducer,
+    // getData: getReducer
+    blogs: blogsReducer
   },
-
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

@@ -8,26 +8,21 @@ import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
 import { useSelector } from "react-redux"
 import useApiRequest from "../services/useApiRequest"
-import useBlogRequest from "../services/useBlogRequest"
+import useBlogRequests from "../services/useBlogRequests"
 
-function Home () {
-  const {getBlogs} =useBlogRequest()
-  const {blogs}=useSelector(state=>state.blogs)
-
+function Home() {
+  const { user } = useSelector((state) => state.auth)
+  const {getBlogs}= useBlogRequests()
+  const {blogs} = useSelector(state=>state.blogs)
+  console.log(blogs)
   useEffect(() => {
     getBlogs()
   }, [])
-  console.log(blogs);
-
+  
   return (
+    <>
     
-
-    <div>
-      {blogs.map((blog)=> <div>{blog.title}</div>      )}
-      
-
-
-    </div>
+    </>
   )
 }
 

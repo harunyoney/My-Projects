@@ -23,8 +23,8 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://github.com/Unflappable">
-        Unflappable
+      <Link color="inherit" href="https://github.com/MustSel">
+        MustSel
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
