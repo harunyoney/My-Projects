@@ -70,3 +70,102 @@ myTuple3 = [[1, 'john'],[2, 'Smith']]
 myTuple3.push(['jane',4]) // hata
 myTuple3.push([4,'jane']) // ok
 myTuple3.push(false) //hata */
+
+//! Enum
+
+/*  enum Color {
+    Red,
+    Green,
+    Blue
+} */
+
+/* Const koymadan js
+var Color;
+(function (Color) {
+    Color[Color["Red"] = 0] = "Red";
+    Color[Color["Green"] = 1] = "Green";
+    Color[Color["Blue"] = 2] = "Blue";
+})(Color || (Color = {}));
+let selectedColor = Color.Blue;
+console.log(selectedColor);
+*/
+
+/* let selectedColor : Color = Color.Blue
+
+console.log(selectedColor) */
+
+
+/* enum Tshirt {
+    Small = 'S',
+    Medium = 'M',
+    Large = 'L'
+}
+
+let userSize : Tshirt = Tshirt.Small
+
+console.log(userSize) */
+
+
+/* enum StatusCodes {
+    NotFound = 404,
+    Success = 200,
+    Accepted = Success + 2,
+    BadRequest = NotFound - 4,
+    ServerErros
+}
+
+console.log(StatusCodes.ServerErros) */
+
+
+//! Any Type
+
+/* let d : any = 4
+d = 'Merhaba'
+d = false
+
+let anyArray: any [] = [1 , 'Selam']
+
+anyArray.push(true)
+
+let e : boolean = d */
+
+//! Unknown
+
+/* let notSure: unknown = 4
+notSure = 'Selam'
+
+console.log((notSure as string).length) //alias yöntemi
+console.log((<string>notSure).length) // generic yöntem */
+
+
+//! Void return içermeyen fonksiyonların dönüş tipi
+
+/* let f : number = 100
+
+function increase () : void{
+
+    console.log(f)
+     f++
+}
+
+
+increase() */
+
+//! Never hiç bir zaman geri dönüşü olmayacak durumlar için
+
+/* function endlessLoop (): never {
+
+    while(true){
+        console.log('Hello')
+    }
+} */
+
+
+
+//! Union Type
+
+let g : string | number = 100
+
+g = 'Merhaba'
+
+g = true //Compiler
