@@ -10,6 +10,7 @@ import { btnStyle } from "../styles/globalStyles"
 import useStockRequest from "../services/useStockRequest"
 
 export default function FirmCard({ firm, handleOpen, setInfo }) {
+  console.log("firm kardo");
   //   const btnStyle = {
   //     "&:hover": { color: "red", cursor: "pointer" },
   //   }

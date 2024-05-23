@@ -25,6 +25,7 @@ import TableSkeleton, {
 const Firms = () => {
   // const { axiosToken } = useAxios()
   // const { getFirms, getSales } = useStockRequest()
+  console.log("hello");
   const { getStock } = useStockRequest()
   const { firms, loading, error } = useSelector((state) => state.stock)
   const [open, setOpen] = useState(false)
