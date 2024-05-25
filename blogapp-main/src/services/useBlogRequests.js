@@ -7,7 +7,6 @@ import {
   getBlogDetailsSuccess,
   getBlogsSuccess,
   getCategoriesSuccess,
- 
   getUsersSuccess,
   likedSuccess,
 } from "../features/blogsSlice";
@@ -18,7 +17,7 @@ const useBlogRequests = () => {
   const { axiosToken, axiosPublic, axiosAdminToken } = useAxios();
 
   const getBlogs = async (page) => {
-    dispatch(fetchStart());
+    // dispatch(fetchStart());
     try {
       const res = await axiosPublic(
         "/blogs/?sort[createdAt]=desc&&limit=6&page=" + page

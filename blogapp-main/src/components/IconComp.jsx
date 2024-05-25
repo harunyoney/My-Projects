@@ -13,37 +13,33 @@ const IconComp = ({ blog, users, page,inBlog }) => {
   const { liked,pages,blogs } = useSelector((state) => state.blogs);
   const { currentUserId } = useSelector((state) => state.auth.user);
   const { likesss, getBlogs } = useBlogRequests();
-  const [likeCount, setlikeCount] = useState(blog?.likes?.length);
+  const [likeCount, setlikeCount] = useState(blog?.likes?.length||0);
 
   const [likers, setLikers] = useState();
   const [userLiked, setUserLiked] = useState(blog?.likes?.includes(currentUserId));
   
-
-//  console.log(blog?.likes?.length);
-
   const getLikers = (likes) => {
     return likes
       ?.map((userId) => users.find((user) => user._id === userId)?.username)
       .filter(Boolean) || [];
   };
- 
-
     const handleLike = async () => {
-   
-    // console.log(currentPage);
+      
     await likesss(blog?._id);
      const currentPage= Number(sessionStorage.getItem("page"))
     if(inBlog) {
-      getBlogs(currentPage)
-      const filteredblog=blogs.filter(item=>item._id===blog._id)
-      setLikers(getLikers(filteredblog[0]?.likes))
-      // console.log(likers);
-      setlikeCount(filteredblog[0]?.likes.length)
+      await getBlogs(currentPage)
+      const filteredblog=await blogs.find(item=>item._id===blog._id)
+     await setLikers(getLikers(filteredblog?.likes))
+      await setUserLiked(filteredblog?.likes.includes(currentUserId))
+     await setlikeCount(filteredblog?.likes.length||0)
     }
   };
   useEffect(() => {
     setLikers(getLikers(blog?.likes));
-  }, [blog?.likes, blog._id, page, liked,likeCount]);
+    // setUserLiked(blog?.likes?.includes(currentUserId));
+    setlikeCount(blog?.likes?.length||0)
+  }, [blog?.likes,users]);
 
   useEffect(() => {
     setUserLiked(blog?.likes?.includes(currentUserId))
@@ -52,7 +48,7 @@ const IconComp = ({ blog, users, page,inBlog }) => {
       
     } 
     
-  }, [liked, blog?._id, page,likeCount,handleLike]);
+  }, [liked,blog?._id]);
 
 
 

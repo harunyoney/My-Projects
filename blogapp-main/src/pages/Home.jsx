@@ -9,7 +9,7 @@ import Card from "../components/Card";
 import { Pagination, Stack } from "@mui/material";
 
 function Home() {
-  const { user } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.auth);
   const { getBlogs, getUsers } = useBlogRequests();
   const { blogs, users, pages } = useSelector((state) => state.blogs);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,7 +18,7 @@ function Home() {
     getBlogs(currentPage);
     getUsers();
     console.log("first");
-  }, [currentPage]);
+  } ,[currentPage]);
 
   useEffect(() => {
     getBlogs(currentPage);
