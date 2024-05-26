@@ -4,38 +4,49 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useBlogRequests from '../services/useBlogRequests';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
-import { BiLike } from "react-icons/bi";
-import { GoCommentDiscussion } from "react-icons/go";
-import { GrView } from "react-icons/gr";
 import IconComp from '../components/IconComp';
+import ScrollToTop from '../components/ScrollToTop';
+import Comments from '../components/Comments';
+import { setShowComments } from '../features/blogsSlice';
 
 export default function BlogDetails() {
     const { id } = useParams();
     const defaultImage = "https://geekflare.com/wp-content/uploads/2016/04/featured-image-generator.jpg";
     const defaultAuthorImage = "https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png";
     
-    
+    const dispatch = useDispatch();
     const { getBlogDetails,getUsers } = useBlogRequests();
-    const { blogDetails: blog, users,loading } = useSelector(state => state.blogs);
-
+    const { blogDetails: blog, users,showComments } = useSelector(state => state.blogs);
+    const [comment, setComment] = useState(false)
+    const [redirectToDetails, setRedirectToDetails] = useState(false);
+    const refreshBlogDetails = () => {
+        getBlogDetails(id);
+    };
+// console.log(blog)
     useEffect(() => {
         getBlogDetails(id);
         getUsers()
-    }, []);
-    console.log("blogdetails25", blog)
-
+    }, [id]);
+ 
+    useEffect(() => {
+        if (showComments) {
+          setComment(true);
+          console.log("first")
+          dispatch(setShowComments())
+        }
+      }, [showComments]);
     
     if (!blog) return null;
 
     const author = users.find(user => user._id === blog?.userId?._id) || {};
-    // console.log(author)
+    console.log(blog)
 
     return (
+        <>
         <Container maxWidth="lg">
             <Box mt={12} display="flex" justifyContent="center">
                 <Card sx={{ maxWidth: 800, width: '100%' }}>
@@ -67,34 +78,16 @@ export default function BlogDetails() {
                         <Typography variant="body1" color="text.secondary" paragraph>
                             {blog.content}
                         </Typography>
-                        {/* <Box display="flex" alignItems="center" justifyContent="space-between" mt={2}>
-                            <Box display="flex" alignItems="center" gap={2}>
-                                <Box display="flex" alignItems="center" gap={1}>
-                                    <BiLike onClick={handleLike} className={`scale-125 ${
-                      blog?.likes?.includes(currentUserId) ? "text-red-600" : ""
-                    }`} style={{ cursor: 'pointer' }} />
-                                    <Typography variant="body2">{blog?.likes?.length}</Typography>
-                                </Box>
-                                <Box display="flex" alignItems="center" gap={1}>
-                                    <GoCommentDiscussion style={{ cursor: 'pointer' }} />
-                                    <Typography variant="body2">{blog?.comments?.length}</Typography>
-                                </Box>
-                                <Box display="flex" alignItems="center" gap={1}>
-                                    <GrView />
-                                    <Typography variant="body2">{blog.countOfVisitors}</Typography>
-                                </Box>
-                            </Box>
-                            {currentUserId===blog?.userId?._id && <Button variant="contained" component={Link} to="#">
-                                Edit Blog
-                            </Button>}
-                            
-                        </Box> */}
-                        {/* {blog?.length>0&&<IconComp users={users} blog={blog} inBlog={true}/>} */}
-                        <IconComp users={users} blog={blog} inBlog={true}/>
-                        
+                       
+                        <IconComp users={users} comment={comment} setComment={setComment} blog={blog} inBlog={true}/>
                     </CardContent>
                 </Card>
             </Box>
+            <ScrollToTop/>
         </Container>
+        {comment && <Comments id={blog?._id} comments={blog?.comments} users={users} redirectToDetails={redirectToDetails} setRedirectToDetails={setRedirectToDetails} onCommentChange={refreshBlogDetails} />}
+        </>
+        
     );
 }
+
