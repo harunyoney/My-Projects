@@ -42,7 +42,7 @@ const Details = () => {
             {Math.round(recipeDet.totalNutrients.ENERC_KCAL.quantity)}
             {recipeDet.totalNutrients.ENERC_KCAL.unit}
           </p>
-          <p data-test="contentParag">{recipeDet.totalWeight}</p>
+          <p data-test="contentCal">{recipeDet.totalWeight}</p>
           <p data-test="contentCal">
             Calories: {Math.round(recipeDet.calories)}
           </p>
