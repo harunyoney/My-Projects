@@ -21,7 +21,7 @@ const Login = () => {
         <div className="flex justify-center items-center mt-2 gap-2 ">
           <span className="w-[6px] h-[39px] bg-yellow-500 "></span>
           <h1 className="text-[22px] sm:text-[32px] font-montserrat font-[700] uppercase ">
-            Clarus Store
+            Harun Store
           </h1>
         </div>
         <div className="my-2">
@@ -52,7 +52,7 @@ const Login = () => {
           </div>
           <div className="flex flex-col gap-2">
             <label
-              className="font-montserrat text-label text-labelColor hover:cursor-pointer hover:after:content-['admin@aa.com'] hover:after:text-black hover:after:pl-3 hover:after:underline"
+              className="font-montserrat text-label text-labelColor hover:cursor-pointer hover:after:content-['admin'] hover:after:text-black hover:after:pl-3 hover:after:underline"
               htmlFor="password"
             >
               Password
