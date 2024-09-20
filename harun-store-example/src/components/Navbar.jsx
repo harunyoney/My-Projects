@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo1.png";
 import { NavLink, useLocation } from "react-router-dom";
 import { closeNavbar, logoutIcon, openNavbar } from "../helpers/icons";
 import { AuthContext } from "../context/AuthProvider";
@@ -33,9 +33,9 @@ const Navbar = () => {
             target="true"
             className="flex items-center"
           >
-            <img src={logo} alt="clarusway" width={50} height={50} />
-            <span className="text-gray-700 hover:text-gray-900 font-medium">
-              Clarusway
+            <img src={logo} alt="harunStore" width={50} height={50} />
+            <span className="text-gray-700 hover:text-gray-900 font-semibold">
+              HarunStore
             </span>
           </a>
           {/**icon md ekranlardan sonra gizlensin diyoruz */}
