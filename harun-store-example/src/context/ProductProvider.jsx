@@ -7,7 +7,7 @@ const ProductContext = createContext();
 //! react hooklarını javascript fonksyionları içerisinde kullanamadığımız için custom hooklara ihtiyaç duyarız.
 //? custom hooklar use keywordü ile başlamak zorunda
 //* custom hooklar jsx return etmez.
-//! zorunlu değil tükteim yaparken sadece kolaylık sağlıyor
+//! zorunlu değil tüketim yaparken sadece kolaylık sağlıyor
 export const useProductsContext = () => {
   return useContext(ProductContext);
 };

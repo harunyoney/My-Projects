@@ -1,18 +1,18 @@
 export const stats = [
   {
-    data: "35K",
+    data: "15K",
     title: "Customers",
   },
   {
-    data: "10K+",
+    data: "2K+",
     title: "Downloads",
   },
   {
-    data: "40+",
+    data: "12+",
     title: "Countries",
   },
   {
-    data: "30M+",
+    data: "5M+",
     title: "Total revenue",
   },
 ];
