@@ -98,6 +98,7 @@ const Login = () => {
                   <TextField
                     label="Email"
                     name="email"
+                    placeholder="test2@gmail.com"
                     id="email"
                     type="email"
                     variant="outlined"
@@ -111,6 +112,7 @@ const Login = () => {
                     label="password"
                     name="password"
                     id="password"
+                    placeholder="123456Test*"
                     type="password"
                     variant="outlined"
                     value={values.password}
